@@ -9,8 +9,8 @@ import Navbar from "./navbar.jsx";
 import Home from "./homepage.jsx";
 import About from "./aboutus.jsx";
 import Monitoring from "./Monitoring.jsx";
-import Recommendations from "./Recommendations.jsx";
 import Login from "./login.jsx";
+import Register from "./register.jsx";   // ✅ IMPORTANT
 
 const App = () => {
   return (
@@ -21,8 +21,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/monitoring" element={<Monitoring />} />
-          <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} /> {/* ✅ IMPORTANT */}
         </Routes>
       </main>
     </Router>

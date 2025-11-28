@@ -1,0 +1,136 @@
+/* -----------------------------------
+   GLOBAL AUTH PAGE BACKGROUND
+----------------------------------- */
+.auth-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #c8f9d8, #7ce4a3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Floating background shapes */
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.5;
+}
+
+.shape1 {
+  width: 220px;
+  height: 220px;
+  background: #5ad082;
+  top: 12%;
+  left: 8%;
+}
+
+.shape2 {
+  width: 300px;
+  height: 300px;
+  background: #9df0b8;
+  bottom: 10%;
+  right: 10%;
+}
+
+/* -----------------------------------
+   AUTH BOX
+----------------------------------- */
+.auth-box {
+  width: 410px;
+  padding: 40px 35px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.15);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 900;
+  color: #0b6b37;
+}
+
+.subtitle {
+  color: #444;
+  margin-bottom: 28px;
+  font-size: 16px;
+}
+
+/* -----------------------------------
+   FORM
+----------------------------------- */
+form {
+  text-align: left;
+}
+
+label {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #bfeccc;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: 15px;
+  transition: 0.3s ease;
+}
+
+input:focus {
+  border-color: #33c16d;
+  outline: none;
+}
+
+.btn {
+  width: 100%;
+  padding: 13px;
+  background: #2fbf71;
+  color: white;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  font-size: 17px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn:hover {
+  background: #249c5c;
+}
+
+.switch-text {
+  text-align: center;
+  margin-top: 15px;
+  color: #333;
+  font-size: 14px;
+}
+
+.switch-text a {
+  color: #005bbb;
+  font-weight: bold;
+}
+
+.switch-text a:hover {
+  text-decoration: underline;
+}
+
+/* Animation */
+.fade-in {
+  animation: fadeUp 0.9s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}

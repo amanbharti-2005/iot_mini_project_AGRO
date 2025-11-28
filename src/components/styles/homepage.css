@@ -1,91 +1,98 @@
-/* REMOVE DEFAULT BODY GAP */
+/* --------------------------------------------------
+   RESET
+-------------------------------------------------- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* FIX WHITE GAP BELOW NAVBAR */
-body, #root {
-  background: #2fbf71;
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background: #2fbf71; /* Home green background */
 }
 
-/* PAGE LAYOUT */
 .home-container {
+  width: 100%;
   min-height: calc(100vh - 70px);
-  background: #2fbf71;
+  background: #2fbf71; /* green only for home */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 20px;
   text-align: center;
+  padding: 0; /* no extra space */
 }
 
-/* IMAGE + GLOW POSITIONING */
+/* IMAGE + GLOW */
 .image-wrapper {
   position: relative;
   width: 340px;
   height: 340px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
-/* GLOW BEHIND IMAGE */
 .glow-circle {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   border-radius: 50%;
-  top: 0;
-  left: 0;
-  
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.15);
   box-shadow:
-    0 0 60px rgba(255, 255, 255, 0.5),
-    0 0 160px rgba(255, 255, 255, 0.35),
-    0 0 260px rgba(255, 255, 255, 0.18);
-
-  animation: rotateGlow 9s linear infinite;
+    0 0 60px rgba(255,255,255,0.55),
+    0 0 160px rgba(255,255,255,0.35),
+    0 0 260px rgba(255,255,255,0.22);
+  animation: rotateGlow 10s linear infinite;
   z-index: 1;
 }
 
-/* IMAGE (STILL) */
 .farmer-image {
   position: relative;
   z-index: 2;
   width: 80%;
   height: auto;
-  margin-top: 35px;
 }
 
 /* WELCOME TEXT */
 .welcome-text {
-  font-size: 3.5rem;
+  font-size: 3.7rem;
   font-weight: 800;
-  margin-top: 35px;
-  position: relative;
+  margin: 25px 0 0 0; /* Reduce top margin */
   text-transform: uppercase;
   color: transparent;
   -webkit-text-stroke: 2px white;
+  position: relative;
 }
 
-/* LIQUID FILL EFFECT */
 .animate-text {
-  background: linear-gradient(90deg, white 50%, transparent 0);
+  background: linear-gradient(90deg, white 50%, transparent 50%);
   background-size: 200% 100%;
   background-repeat: no-repeat;
   -webkit-background-clip: text;
           background-clip: text;
-  animation: textFill 4s infinite ease-in-out alternate;
+  animation: textFill 3.5s infinite alternate ease-in-out;
 }
 
-@keyframes textFill {
-  0%   { background-position: 0% 0; }
-  100% { background-position: 100% 0; }
-}
-
-/* ROTATION KEYFRAMES */
+/* ANIMATIONS */
 @keyframes rotateGlow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes textFill {
+  0% { background-position: 0% 0; }
+  100% { background-position: 100% 0; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .image-wrapper {
+    width: 270px;
+    height: 270px;
+  }
+
+  .welcome-text {
+    font-size: 2.6rem;
+  }
 }
