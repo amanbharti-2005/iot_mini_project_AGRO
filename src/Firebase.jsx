@@ -1,23 +1,20 @@
-// src/firebase.js
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
-// Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyD9Ou5vdbhPE6Iw08hYul7H_zrHLULnu3g",
   authDomain: "iot-project-agro-e1776.firebaseapp.com",
-  databaseURL: "https://iot-project-agro-e1776-default-rtdb.firebaseio.com",
+  databaseURL: "https://iot-project-agro-e1776-default-rtdb.firebaseio.com/",  // ADD SLASH
   projectId: "iot-project-agro-e1776",
   storageBucket: "iot-project-agro-e1776.firebasestorage.app",
   messagingSenderId: "546170244240",
   appId: "1:546170244240:web:4ed4f90bb1091ea0bc1c15"
 };
 
-// Initialize Firebase app
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-// Export Firebase Auth + Realtime Database
 export const auth = getAuth(app);
-export const db = getDatabase(app);
+
+// 🔥 FORCE CORRECT DATABASE INSTANCE
+export const db = getDatabase(app, "https://iot-project-agro-e1776-default-rtdb.firebaseio.com/");

@@ -4,7 +4,7 @@ import "./components/styles/login.css";
 
 // Firebase Imports
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, set } from "firebase/database";
 import { app } from "./firebase";
 
 export default function Login() {
@@ -64,7 +64,15 @@ export default function Login() {
       const snapshot = await get(userRef);
 
       let name = "";
-      if (snapshot.exists()) {
+
+      // ⭐ If user does NOT exist in DB → CREATE IT AUTOMATICALLY
+      if (!snapshot.exists()) {
+        await set(ref(db, "users/" + user.uid), {
+          name: user.displayName || "New User",
+          email: user.email,
+        });
+        name = user.displayName || "New User";
+      } else {
         name = snapshot.val().name;
       }
 
