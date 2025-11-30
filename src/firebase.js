@@ -1,10 +1,8 @@
 // src/firebase.js
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
-// Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyD9Ou5vdbhPE6Iw08hYul7H_zrHLULnu3g",
   authDomain: "iot-project-agro-e1776.firebaseapp.com",
@@ -15,9 +13,6 @@ const firebaseConfig = {
   appId: "1:546170244240:web:4ed4f90bb1091ea0bc1c15"
 };
 
-// Initialize Firebase app
 export const app = initializeApp(firebaseConfig);
-
-// Export Firebase Auth + Realtime Database
 export const auth = getAuth(app);
 export const db = getDatabase(app);

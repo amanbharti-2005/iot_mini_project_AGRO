@@ -1,32 +1,46 @@
 // src/App.jsx
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Components
-import Navbar from "./navbar.jsx";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
-// Pages
-import Home from "./homepage.jsx";
-import About from "./aboutus.jsx";
-import Monitoring from "./Monitoring.jsx";
-import Login from "./login.jsx";
-import Register from "./register.jsx";   // ✅ IMPORTANT
+import Home from "./homepage";
+import About from "./aboutus";
+import Monitoring from "./Monitoring";
+import Login from "./login";
+import Register from "./register";
 
-const App = () => {
+import Navbar from "./navbar";
+import ProfileBar from "./Profilebar";
+import { ThemeProvider } from "./ThemeContext";
+
+function Layout() {
+  const location = useLocation();
+
+  // hide profile bar on login & register pages
+  const hideProfileBar =
+    location.pathname === "/login" || location.pathname === "/register";
+
   return (
-    <Router>
+    <>
       <Navbar />
-      <main>
+      {!hideProfileBar && <ProfileBar />}
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <Router>
+        <Layout />
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/monitoring" element={<Monitoring />} />
+          <Route path="/monitoring" element={<Monitoring />} /> {/* FIXED */}
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} /> {/* ✅ IMPORTANT */}
+          <Route path="/register" element={<Register />} />
         </Routes>
-      </main>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
-};
-
-export default App;
+}

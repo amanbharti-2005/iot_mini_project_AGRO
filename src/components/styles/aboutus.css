@@ -9,9 +9,44 @@
 
 body, html, #root {
   font-family: "Poppins", sans-serif;
-  background: #f8f9fa;
-  color: #333;
   scroll-behavior: smooth;
+}
+
+/* Light Mode Defaults */
+:root {
+  --page-bg: #f8f9fa;
+  --text-main: #333;
+
+  --card-bg: #ffffff;
+  --card-text: #154b2c;
+  --card-desc: #555;
+
+  --sensor-card-bg: #ffffff;
+  --sensor-card-text: #154b2c;
+
+  --why-bg: #d4f3e2;
+  --why-text: #154b2c;
+}
+
+/* DARK MODE VARIABLES */
+.dark {
+  --page-bg: #0f0f0f;
+  --text-main: #e5e5e5;
+
+  --card-bg: #1a1d1a;
+  --card-text: #4ade80;
+  --card-desc: #d0d0d0;
+
+  --sensor-card-bg: #1a1e1a;
+  --sensor-card-text: #4ade80;
+
+  --why-bg: #161a16;
+  --why-text: #e5e5e5;
+}
+
+/* Apply background */
+body.dark {
+  background: var(--page-bg);
 }
 
 /* --------------------------------------------------
@@ -24,40 +59,37 @@ body, html, #root {
   flex-direction: column;
   gap: 50px;
   text-align: center;
+  background: var(--page-bg);
 }
 
 .about-card {
   max-width: 1100px;
   margin: auto;
-  background: #ffffff;
+  background: var(--card-bg);
   padding: 50px 30px;
   border-radius: 25px;
-  text-align: center;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.45);
+  transition: 0.4s ease;
 }
 
 .about-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  background: #161916;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
 }
 
 .about-title {
   font-size: 46px;
   font-weight: 900;
-  color: #0f6b2e;
+  color: var(--card-text);
   margin-bottom: 20px;
-  letter-spacing: 1px;
-  font-family: "Poppins", sans-serif;
 }
 
 .about-desc {
   max-width: 780px;
   margin: auto;
   font-size: 19px;
-  color: #444;
+  color: var(--card-desc);
   line-height: 1.8;
-  font-family: "Poppins", sans-serif;
 }
 
 /* --------------------------------------------------
@@ -72,79 +104,76 @@ body, html, #root {
 .sub-heading {
   font-size: 36px;
   font-weight: 800;
-  color: #0f6b2e;
+  color: var(--sensor-card-text);
   margin-bottom: 40px;
-  font-family: "Poppins", sans-serif;
 }
 
+/* SCROLLABLE SENSOR CARDS */
 .sensor-grid {
   display: flex;
-  justify-content: center;
-  align-items: stretch;
+  justify-content: flex-start;
   gap: 30px;
-  flex-wrap: nowrap;
   overflow-x: auto;
-  padding-bottom: 15px;
+  padding: 15px;
+  scrollbar-width: thin;
 }
 
 .sensor-card {
-  background: #ffffff;
-  padding: 30px 20px;
-  border-radius: 25px;
-  min-width: 220px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
-  text-align: center;
+  background: var(--sensor-card-bg);
+  color: var(--sensor-card-text);
+  padding: 35px 20px;
+  border-radius: 28px;
+  min-width: 230px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+  transition: 0.35s ease;
 }
 
 .sensor-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 18px 45px rgba(0,0,0,0.12);
-  background: linear-gradient(135deg, #e1f7eb, #ffffff);
+  background: #121512;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.65);
 }
 
 .sensor-card .icon {
-  font-size: 44px;
-  color: #2fbf71;
+  font-size: 46px;
+  color: var(--sensor-card-text);
   margin-bottom: 15px;
 }
 
 .sensor-card h4 {
   font-size: 22px;
   font-weight: 700;
-  color: #154b2c;
+  color: var(--sensor-card-text);
   margin-bottom: 12px;
 }
 
 .sensor-card p {
   font-size: 16px;
-  color: #666;
-  line-height: 1.7;
+  color: var(--card-desc);
+  line-height: 1.6;
 }
 
 /* --------------------------------------------------
-   WHY CHOOSE AGRO - TILE STYLE
+   WHY CHOOSE AGRO
 -------------------------------------------------- */
 .why-section {
   width: 100%;
   padding: 80px 40px;
-  background: linear-gradient(135deg, #e8fdf4, #d0f7e6);
+  background: var(--page-bg);
   text-align: center;
 }
 
 .why-section .sub-heading {
   font-size: 44px;
   font-weight: 900;
-  color: #0f6b2e;
+  color: var(--sensor-card-text);
   margin-bottom: 60px;
-  font-family: "Poppins", sans-serif;
 }
 
 .why-list {
   list-style: none;
   max-width: 1000px;
   margin: auto;
-  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -154,44 +183,35 @@ body, html, #root {
   display: flex;
   align-items: center;
   gap: 20px;
-  background: #d4f3e2;
+  background: var(--why-bg);
   padding: 25px 30px;
-  border-radius: 20px;
+  border-radius: 22px;
   font-size: 20px;
   font-weight: 600;
-  color: #154b2c;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  font-family: "Poppins", sans-serif;
+  color: var(--why-text);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.45);
+  transition: 0.3s ease;
 }
 
 .why-list li:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 45px rgba(0,0,0,0.12);
-  background: linear-gradient(135deg, #b8ebcd, #ffffff);
+  background: #121512;
 }
 
 .check-icon {
   font-size: 28px;
-  color: #2fbf71;
-  font-weight: bold;
-  flex-shrink: 0;
-  width: 50px;
-  height: 50px;
-  background: #a7e5be;
+  color: #4ade80;
+  width: 45px;
+  height: 45px;
+  background: rgba(50,200,120,0.25);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
-}
-
-.why-list li:hover .check-icon {
-  transform: scale(1.1);
 }
 
 /* --------------------------------------------------
-   FADE IN ANIMATION
+   FADE ANIMATION
 -------------------------------------------------- */
 .fade-in {
   opacity: 0;
@@ -212,14 +232,9 @@ body, html, #root {
 /* --------------------------------------------------
    RESPONSIVE
 -------------------------------------------------- */
-@media (max-width: 1024px) {
-  .why-section { padding: 60px 30px; }
-  .why-section .sub-heading { font-size: 36px; }
-  .why-list li { font-size: 18px; padding: 22px 25px; gap: 18px; }
-}
-
 @media (max-width: 768px) {
+  .about-title { font-size: 36px; }
+  .sub-heading { font-size: 30px; }
   .why-section { padding: 50px 20px; }
-  .why-section .sub-heading { font-size: 30px; }
-  .why-list li { font-size: 17px; padding: 18px 20px; gap: 15px; }
+  .sensor-grid { gap: 20px; }
 }

@@ -1,0 +1,96 @@
+/* ---------------------------
+   PROFILE BAR (Light/Dark Mode)
+---------------------------- */
+
+.profile-bar {
+  width: 100%;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 25px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 2px solid var(--border-color);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* User name/email text */
+.profile-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-right: 15px;
+  color: var(--text-color);
+  background: var(--profile-pill-bg);
+  padding: 8px 14px;
+  border-radius: 25px;
+  border: 1px solid var(--profile-pill-border);
+  transition: 0.3s ease;
+}
+
+/* Logout button */
+.logout-btn {
+  padding: 8px 16px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: #d93636;
+  transform: scale(1.05);
+}
+
+/* ---------------------------
+   THEME VARIABLES
+---------------------------- */
+
+/* Light Theme */
+:root[data-theme="light"] {
+  --card-bg: #ffffff;
+  --text-color: #0c5a24;
+  --border-color: #e6f7e6;
+
+  --profile-pill-bg: #e8fbe8;
+  --profile-pill-border: #c5e8c5;
+}
+
+/* Dark Theme */
+:root[data-theme="dark"] {
+  --card-bg: #1b1f1b;
+  --text-color: #e6ffe6;
+  --border-color: #2d4b2d;
+
+  --profile-pill-bg: #263a26;
+  --profile-pill-border: #3f5d3f;
+}
+
+/* ---------------------------
+   MOBILE RESPONSIVENESS
+---------------------------- */
+
+@media (max-width: 600px) {
+  .profile-bar {
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .profile-name {
+    font-size: 14px;
+    padding: 7px 12px;
+  }
+
+  .logout-btn {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+}
