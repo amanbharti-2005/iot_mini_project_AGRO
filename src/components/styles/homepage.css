@@ -3,7 +3,6 @@
 -------------------------------------------------- */
 * {
   margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
@@ -11,64 +10,76 @@ body, html, #root {
   margin: 0;
   padding: 0;
   font-family: "Poppins", sans-serif;
-  background: #2fbf71; /* Home green background */
+  background: #2fbf71;
 }
 
+/* HOME CONTAINER */
 .home-container {
   width: 100%;
   min-height: calc(100vh - 70px);
-  background: #2fbf71; /* green only for home */
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: flex-start;
+  align-items: center;
   text-align: center;
-  padding: 0; /* no extra space */
 }
 
-/* IMAGE + GLOW */
+/* RESPONSIVE IMAGE CIRCLE */
 .image-wrapper {
   position: relative;
-  width: 340px;
-  height: 340px;
-  margin-top: 20px;
+  width: 45vw;      /* responsive to screen width */
+  height: 45vw;     /* keep it perfectly circular */
+  max-width: 470px; /* upper limit for large screens */
+  max-height: 470px;
+  min-width: 260px; /* lower limit for mobile screens */
+  min-height: 260px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 40px;
 }
 
+/* GLOW CIRCLE BEHIND FARMER */
 .glow-circle {
   position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
+
   box-shadow:
-    0 0 60px rgba(255,255,255,0.55),
-    0 0 160px rgba(255,255,255,0.35),
-    0 0 260px rgba(255,255,255,0.22);
-  animation: rotateGlow 10s linear infinite;
+    0 0 80px rgba(255, 255, 255, 0.6),
+    0 0 200px rgba(255, 255, 255, 0.3),
+    0 0 300px rgba(255, 255, 255, 0.2);
+
+  animation: rotateGlow 12s linear infinite;
   z-index: 1;
 }
 
+/* FARMER IMAGE - centered inside circle */
 .farmer-image {
-  position: relative;
-  z-index: 2;
-  width: 80%;
+  width: 70%;
   height: auto;
+  z-index: 2;
+  object-fit: contain;
 }
 
 /* WELCOME TEXT */
 .welcome-text {
-  font-size: 3.7rem;
+  font-size: 4vw;
+  max-font-size: 60px;
   font-weight: 800;
-  margin: 25px 0 0 0; /* Reduce top margin */
+  margin-top: 25px;
   text-transform: uppercase;
   color: transparent;
   -webkit-text-stroke: 2px white;
-  position: relative;
 }
 
 .animate-text {
   background: linear-gradient(90deg, white 50%, transparent 50%);
   background-size: 200% 100%;
-  background-repeat: no-repeat;
   -webkit-background-clip: text;
           background-clip: text;
   animation: textFill 3.5s infinite alternate ease-in-out;
@@ -85,14 +96,9 @@ body, html, #root {
   100% { background-position: 100% 0; }
 }
 
-/* RESPONSIVE */
+/* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
-  .image-wrapper {
-    width: 270px;
-    height: 270px;
-  }
-
   .welcome-text {
-    font-size: 2.6rem;
+    font-size: 8vw;
   }
 }
