@@ -5,8 +5,7 @@ import "./components/styles/register.css";
 
 // Firebase
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { db } from "./firebase";
-import { ref, set } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 import { app } from "./firebase";
 
 export default function Register() {
@@ -23,7 +22,8 @@ export default function Register() {
     if (!email.trim()) return setError("Email is required");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return setError("Enter a valid email");
+    if (!emailRegex.test(email))
+      return setError("Enter a valid email");
 
     if (!password.trim()) return setError("Password is required");
     if (password.length < 6)
@@ -41,8 +41,11 @@ export default function Register() {
 
       const user = userCredential.user;
 
+      // ⭐ FIXED: Use correct database instance
+      const database = getDatabase(app);
+
       // WRITE DATA TO REALTIME DATABASE
-      await set(ref(db, "users/" + user.uid), {
+      await set(ref(database, "users/" + user.uid), {
         name: name,
         email: email,
       });

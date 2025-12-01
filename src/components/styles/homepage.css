@@ -3,50 +3,112 @@
 -------------------------------------------------- */
 * {
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body, html, #root {
-  margin: 0;
-  padding: 0;
   font-family: "Poppins", sans-serif;
   background: #2fbf71;
+  transition: background 0.3s ease;
 }
 
-/* HOME CONTAINER */
+/* --------------------------------------------------
+   DARK MODE
+-------------------------------------------------- */
+.dark body, 
+.dark #root {
+  background: #0f1e14 !important;
+}
+
+/* --------------------------------------------------
+   HOME CONTAINER (CENTERED CONTENT)
+-------------------------------------------------- */
 .home-container {
   width: 100%;
-  min-height: calc(100vh - 70px);
+  min-height: calc(80vh - 110px);
+  padding-top: 40px;
+
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   text-align: center;
+
+  padding-bottom: 60px;
+  transition: color 0.3s ease;
 }
 
-/* RESPONSIVE IMAGE CIRCLE */
+/* --------------------------------------------------
+   CATCHY TAGLINE — NEW FONT + BURST UP ANIMATION
+-------------------------------------------------- */
+/* --------------------------------------------------
+   LETTER-BY-LETTER BURST ANIMATION
+-------------------------------------------------- */
+
+.tagline {
+  font-family: "Montserrat", sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+  margin-bottom: 40px;
+  text-align: center;
+  display: inline-block;
+}
+
+.dark .tagline {
+  color: #eaffea;
+}
+
+.burst-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  animation: burstLetter 0.55s ease-out forwards;
+}
+
+@keyframes burstLetter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-18px) scale(1.15);
+  }
+  80% {
+    transform: translateY(5px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --------------------------------------------------
+   IMAGE + GLOW
+-------------------------------------------------- */
 .image-wrapper {
   position: relative;
-  width: 45vw;      /* responsive to screen width */
-  height: 45vw;     /* keep it perfectly circular */
-  max-width: 470px; /* upper limit for large screens */
-  max-height: 470px;
-  min-width: 260px; /* lower limit for mobile screens */
+  width: min(60vw, 450px);
+  height: min(60vw, 450px);
+  min-width: 260px;
   min-height: 260px;
 
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 
-  margin-top: 40px;
+  animation: fadeInScale 1.4s ease forwards;
 }
 
-/* GLOW CIRCLE BEHIND FARMER */
 .glow-circle {
   position: absolute;
   width: 100%;
   height: 100%;
   border-radius: 50%;
+
   background: rgba(255, 255, 255, 0.15);
 
   box-shadow:
@@ -54,51 +116,95 @@ body, html, #root {
     0 0 200px rgba(255, 255, 255, 0.3),
     0 0 300px rgba(255, 255, 255, 0.2);
 
-  animation: rotateGlow 12s linear infinite;
+  animation: rotateGlow 12s linear infinite,
+             pulseGlow 3s ease-in-out infinite;
   z-index: 1;
 }
 
-/* FARMER IMAGE - centered inside circle */
+/* Dark Mode Glow */
+.dark .glow-circle {
+  background: rgba(180, 255, 180, 0.12);
+  box-shadow:
+    0 0 60px rgba(120, 255, 120, 0.4),
+    0 0 140px rgba(120, 255, 120, 0.25);
+}
+
+/* Farmer Image Animation */
 .farmer-image {
   width: 70%;
   height: auto;
-  z-index: 2;
   object-fit: contain;
+  z-index: 2;
+
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+  animation: imageEnter 1.3s ease-out forwards 0.3s;
 }
 
-/* WELCOME TEXT */
+.dark .farmer-image {
+  filter: drop-shadow(0 0 4px rgba(120, 255, 120, 0.4));
+}
+
+/* --------------------------------------------------
+   TEXT — LEFT TO RIGHT FILL ANIMATION
+-------------------------------------------------- */
 .welcome-text {
-  font-size: 4vw;
-  max-font-size: 60px;
-  font-weight: 800;
-  margin-top: 25px;
+  font-size: clamp(28px, 6vw, 60px);
+  font-weight: 900;
+  margin-top: 35px;
   text-transform: uppercase;
+
   color: transparent;
   -webkit-text-stroke: 2px white;
-}
 
-.animate-text {
   background: linear-gradient(90deg, white 50%, transparent 50%);
   background-size: 200% 100%;
+  background-position: 100% 0;
+
   -webkit-background-clip: text;
           background-clip: text;
-  animation: textFill 3.5s infinite alternate ease-in-out;
+
+  animation: textFill 3s linear infinite,
+             textSlideUp 1s ease-out forwards 0.8s;
 }
 
-/* ANIMATIONS */
+.dark .welcome-text {
+  -webkit-text-stroke: 2px #bfffba;
+  background: linear-gradient(90deg, #bfffba 50%, transparent 50%);
+  background-size: 200% 100%;
+}
+
+/* --------------------------------------------------
+   ANIMATIONS
+-------------------------------------------------- */
 @keyframes rotateGlow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-@keyframes textFill {
-  0% { background-position: 0% 0; }
-  100% { background-position: 100% 0; }
+@keyframes pulseGlow {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; }
+ 100% { transform: scale(1); opacity: 0.9; }
 }
 
-/* MOBILE RESPONSIVE */
-@media (max-width: 768px) {
-  .welcome-text {
-    font-size: 8vw;
-  }
+@keyframes fadeInScale {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes imageEnter {
+  0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes textSlideUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes textFill {
+  0%   { background-position: 100% 0; }
+  50%  { background-position: 0% 0; }
+  100% { background-position: 100% 0; }
 }

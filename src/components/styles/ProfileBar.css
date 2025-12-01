@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 25px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.10);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -52,17 +52,17 @@
    THEME VARIABLES
 ---------------------------- */
 
-/* Light Theme */
+/* ⭐ LIGHT THEME — DARKER GREY STRIP */
 :root[data-theme="light"] {
-  --card-bg: #ffffff;
-  --text-color: #0c5a24;
-  --border-color: #e6f7e6;
+  --card-bg: #b5b5b5;          /* DARKER GREY ⭐ */
+  --text-color: #222;
+  --border-color: #9e9e9e;
 
-  --profile-pill-bg: #e8fbe8;
-  --profile-pill-border: #c5e8c5;
+  --profile-pill-bg: #dcdcdc;
+  --profile-pill-border: #bcbcbc;
 }
 
-/* Dark Theme */
+/* DARK THEME */
 :root[data-theme="dark"] {
   --card-bg: #1b1f1b;
   --text-color: #e6ffe6;

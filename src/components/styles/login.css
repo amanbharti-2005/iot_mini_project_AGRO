@@ -9,6 +9,12 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+  transition: 0.3s ease;
+}
+
+/* ----- DARK MODE BACKGROUND ----- */
+:root[data-theme="dark"] .auth-container {
+  background: linear-gradient(135deg, #0a2714, #06451d);
 }
 
 /* Floating background shapes */
@@ -44,22 +50,40 @@
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   border-radius: 20px;
-  box-shadow: 0 15px 45px rgba(0,0,0,0.15);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
   text-align: center;
   position: relative;
   z-index: 2;
+  transition: 0.3s ease;
+}
+
+/* ----- DARK MODE AUTH BOX ----- */
+:root[data-theme="dark"] .auth-box {
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
 }
 
 .title {
   font-size: 34px;
   font-weight: 900;
   color: #0b6b37;
+  transition: 0.3s ease;
 }
 
 .subtitle {
   color: #444;
   margin-bottom: 28px;
   font-size: 16px;
+  transition: 0.3s ease;
+}
+
+/* ----- DARK MODE TEXT ----- */
+:root[data-theme="dark"] .title {
+  color: #8cffb0;
+}
+
+:root[data-theme="dark"] .subtitle {
+  color: #d0ffd6;
 }
 
 /* -----------------------------------
@@ -74,8 +98,12 @@ label {
   font-size: 15px;
   margin-bottom: 6px;
   display: block;
+
+  /* Always black — FIX */
+  color: #111 !important;
 }
 
+/* Input fields */
 input {
   width: 100%;
   padding: 12px;
@@ -84,6 +112,15 @@ input {
   margin-bottom: 18px;
   font-size: 15px;
   transition: 0.3s ease;
+  background: white;
+  color: black;
+}
+
+/* ----- DARK MODE INPUT ----- */
+:root[data-theme="dark"] input {
+  background: #153021;
+  border: 2px solid #2f7a4f;
+  color: #e8ffe8;
 }
 
 input:focus {
@@ -91,6 +128,7 @@ input:focus {
   outline: none;
 }
 
+/* Button */
 .btn {
   width: 100%;
   padding: 13px;
@@ -108,11 +146,25 @@ input:focus {
   background: #249c5c;
 }
 
+/* ----- DARK MODE BUTTON ----- */
+:root[data-theme="dark"] .btn {
+  background: #1f8b52;
+}
+
+:root[data-theme="dark"] .btn:hover {
+  background: #166b3d;
+}
+
 .switch-text {
   text-align: center;
   margin-top: 15px;
   color: #333;
   font-size: 14px;
+}
+
+/* ----- DARK MODE SWITCH TEXT ----- */
+:root[data-theme="dark"] .switch-text {
+  color: #d7ffd7;
 }
 
 .switch-text a {
@@ -133,4 +185,13 @@ input:focus {
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(40px); }
   to { opacity: 1; transform: translateY(0); }
+}
+/* Labels ALWAYS black in light mode */
+label {
+  color: #000 !important;
+}
+
+/* In DARK MODE → make labels white */
+:root[data-theme="dark"] label {
+  color: #ffffff !important;
 }

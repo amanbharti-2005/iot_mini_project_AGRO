@@ -1,3 +1,6 @@
+/* Import premium readable font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 /* ================= NAVBAR ================= */
 .navbar {
   display: flex;
@@ -7,12 +10,13 @@
   color: var(--navbar-text);
   padding: 18px 40px;
   transition: 0.3s ease;
+  font-family: "Inter", sans-serif;
 }
 
 /* LOGO */
 .logo {
   color: var(--navbar-text);
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
 }
 
@@ -25,21 +29,45 @@
 
 .nav-links a {
   color: var(--navbar-text);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   text-decoration: none;
-  transition: 0.25s ease;
+
+  /* ⭐ SUPER SMOOTH TRANSITION */
+  transition: background 0.15s ease,
+              color 0.15s ease,
+              box-shadow 0.15s ease,
+              transform 0.12s ease;
 }
 
+/* Active page */
 .nav-links a.active {
   background: #0f8f3d;
   color: white !important;
+  box-shadow: 0 3px 6px rgba(15, 143, 61, 0.3);
 }
 
+/* ⭐ PRESS-LIKE HOVER EFFECT */
 .nav-links a:hover {
-  color: #0f8f3d;
+  background: #0f8f3d;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(15, 143, 61, 0.25);
+}
+
+/* ⭐ PRESS DOWN WHEN CLICKED */
+.nav-links a:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(15, 143, 61, 0.2);
+}
+
+/* ⭐ FIX: Prevent green box from staying after switching pages */
+.nav-links a:not(:hover):not(.active) {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 /* MODE TEXT + TOGGLE WRAPPER */
@@ -55,7 +83,7 @@
   color: var(--navbar-text);
 }
 
-/* TOGGLE SWITCH */
+/* ================= TOGGLE SWITCH ================= */
 .switch {
   position: relative;
   width: 52px;
@@ -71,9 +99,10 @@
 .slider {
   position: absolute;
   inset: 0;
-  background: #ccc;
+  background: #bfbfbf;
   border-radius: 30px;
-  transition: 0.4s;
+  transition: 0.3s ease;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
 }
 
 .slider:before {
@@ -85,19 +114,20 @@
   bottom: 2px;
   background: white;
   border-radius: 50%;
-  transition: 0.4s;
+  transition: 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* DARK MODE SLIDER ACTIVE */
+/* DARK MODE SWITCH ACTIVE */
 .switch input:checked + .slider {
-  background: #16c47f;
+  background: #0f8f3d;
 }
 
 .switch input:checked + .slider:before {
-  transform: translateX(24px);
+  transform: translateX(26px);
 }
 
-/* MOBILE */
+/* ================= MOBILE ================= */
 .menu-btn {
   display: none;
   color: var(--navbar-text);
@@ -119,4 +149,10 @@
   .menu-btn {
     display: block;
   }
+}
+
+/* ================= LIGHT MODE COLOR ================= */
+:root {
+  --navbar-bg: #c2c2c2;   /* Grey shade */
+  --navbar-text: #222;
 }
