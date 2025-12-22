@@ -1,6 +1,6 @@
 // src/ProfileBar.jsx
 import { useEffect, useState } from "react";
-import "./components/styles/Profilebar.css";
+import "./components/styles/ProfileBar.css";
 export default function ProfileBar() {
   const [user, setUser] = useState(null);
 

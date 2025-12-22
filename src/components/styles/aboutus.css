@@ -239,3 +239,34 @@ body.dark {
   .why-section { padding: 50px 20px; }
   .sensor-grid { gap: 20px; }
 }
+
+/* Make ONLY the text inside the WHY tiles white on hover */
+.why-list li:hover {
+  color: #ffffff !important;
+}
+
+/* Ensure check icon stays light green (does NOT turn white) */
+.why-list li:hover .check-icon {
+  color: #4ade80 !important;          /* keep light green */
+  background: rgba(50,200,120,0.25);   /* keep original light green background */
+}
+/* Hover styling for SENSOR CARDS */
+.sensor-card:hover .icon {
+  color: #4ade80 !important;
+}
+
+.sensor-card:hover h4 {
+  color: #4ade80 !important;
+}
+
+.sensor-card:hover p {
+  color: #ffffff !important;
+}
+/* ABOUT AGRO Hover Effects */
+.about-card:hover .about-title {
+  color: #39a560 !important;   /* Light green heading */
+}
+
+.about-card:hover .about-desc {
+  color: #ffffff !important;   /* White paragraph text */
+}
