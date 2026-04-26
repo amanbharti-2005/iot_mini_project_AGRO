@@ -2,7 +2,7 @@ import React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import farmerImage from "./assets/logo.png";
 import "./components/styles/homepage.css";
-import demoVideo from "./assets/agro_robot_demo_video.mp4";
+
 
 
 const Home = () => {
@@ -143,19 +143,18 @@ return ( <div className="home-portal" onMouseMove={handleMouseMove} >
     />
   </div>
 
-  {/* 🔥 MOVE VIDEO HERE */}
-  <div className="demo-section">
-    <h2 className="demo-heading">🚀 Watch Demo</h2>
+  <div style={{ borderRadius: "20px", overflow: "hidden" }}>
+  <iframe
+    width="500"
+    height="280"
+    src="https://www.youtube.com/embed/x6p5X0WbjRs"
+    title="Agro Rover Demo"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+  ></iframe>
+</div>
 
-    <div className="demo-video-container">
-      <video
-        src={demoVideo}
-        controls
-        muted
-        className="demo-video"
-      />
-    </div>
-  </div>
 </motion.div>
 
     </div>
