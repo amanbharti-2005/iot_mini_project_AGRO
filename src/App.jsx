@@ -7,6 +7,7 @@ import About from "./aboutus";
 import Monitoring from "./Monitoring";
 import Login from "./login";
 import Register from "./register";
+import CropDoctor from "./CropDoctor";
 
 import Navbar from "./navbar";
 import ProfileBar from "./Profilebar";
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/monitoring" element={<Monitoring />} /> {/* FIXED */}
+          <Route path="/cropdoctor" element={<CropDoctor />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>

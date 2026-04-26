@@ -43,5 +43,14 @@ body {
   --navbar-bg: #0c0c0c;
   --navbar-text: #ffffff;
 }
+:root {
+  --navbar-height: 70px;
+  --profile-height: 60px;
+}
+
+/* Push whole app below fixed bars */
+#root {
+  padding-top: calc(var(--navbar-height) + var(--profile-height));
+}
 
 

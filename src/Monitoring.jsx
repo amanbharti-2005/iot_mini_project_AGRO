@@ -23,7 +23,9 @@ const shortTime = (iso) =>
   iso ? new Date(iso).toLocaleTimeString() : "-";
 
 export default function Monitoring() {
-  const [dark, setDark] = useState(false);
+
+  const prevDistanceRef = useRef(0);
+  const [obstacleLabel, setObstacleLabel] = useState("Clear");
 
   const [latest, setLatest] = useState({
     soil: 0,
@@ -33,23 +35,15 @@ export default function Monitoring() {
     sunlight: 0,
     rain: "0",
     water: 0,
+    distance: 0,
     updated: "-"
   });
 
   const [chartData, setChartData] = useState([]);
-  const [alerts, setAlerts] = useState([]);
-
   const abortRef = useRef(null);
-  const lastUpdateRef = useRef(0);
-  const [secondsSince, setSecondsSince] = useState(0);
 
-  /* -----------------------------------------
-            Fetch ThingSpeak Data
-  ------------------------------------------ */
   const buildUrl = (results = HISTORY_POINTS) =>
-    READ_API_KEY
-      ? `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_API_KEY}&results=${results}`
-      : `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?results=${results}`;
+    `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_API_KEY}&results=${results}`;
 
   const fetchFeeds = async () => {
     if (abortRef.current) {
@@ -57,162 +51,140 @@ export default function Monitoring() {
     }
 
     abortRef.current = new AbortController();
-    const signal = abortRef.current.signal;
 
     try {
-      const res = await fetch(buildUrl(), { cache: "no-store", signal });
-      if (!res.ok) return console.error("HTTP error:", res.status);
-
+      const res = await fetch(buildUrl(), { cache: "no-store", signal: abortRef.current.signal });
       const data = await res.json();
-      if (!data || !Array.isArray(data.feeds)) return;
-
       const feeds = data.feeds;
-
       const newest = feeds[feeds.length - 1];
 
-      // -------- DIRECT ThingSpeak MAPPING --------
       const mapped = {
         soil: Number(newest.field1) || 0,
         pump: newest.field2 === "1" ? "1" : "0",
         temp: Number(newest.field3) || 0,
         humidity: Number(newest.field4) || 0,
         sunlight: Number(newest.field5) || 0,
-        rain: newest.field6 === "1" ? "1" : "0",
-        water: Number(newest.field7) || 0,
+        water: Number(newest.field6) || 0,
+        rain: newest.field7 === "1" ? "1" : "0",
+        distance: Number(newest.field8) || 0,
         updated: newest.created_at
       };
 
       setLatest(mapped);
 
-      // Charts
+      // 🔥 FINAL OBSTACLE LOGIC
+      const prev = prevDistanceRef.current;
+      const curr = mapped.distance;
+
+      let label = "Clear";
+
+      if (curr > 0 && curr <= 30) {
+        label = "EMERGENCY";
+      } 
+      else if (prev === 0 && curr > 30) {
+        label = "Detected";   // only once
+      } 
+      else if (curr > 30) {
+        label = "Object Detected";
+      }
+
+      setObstacleLabel(label);
+      prevDistanceRef.current = curr;
+
       const points = feeds.map((f) => ({
         time: shortTime(f.created_at),
         soil: Number(f.field1),
         temp: Number(f.field3),
         humidity: Number(f.field4),
         sunlight: Number(f.field5),
-        rain: f.field6 === "1" ? 1 : 0,
-        water: Number(f.field7),
+        water: Number(f.field6),
+        rain: f.field7 === "1" ? 1 : 0,
+        pump: f.field2 === "1" ? 1 : 0,
+        distance: Number(f.field8)
       }));
 
       setChartData(points);
-
-      // Alerts
-      const now = new Date().toLocaleTimeString();
-      const ev = [];
-
-      if (mapped.soil < 30) ev.push({ time: now, msg: `Soil low (${mapped.soil}%) — irrigation needed` });
-      if (mapped.soil > 80) ev.push({ time: now, msg: `Soil high (${mapped.soil}%)` });
-
-      if (mapped.water < 20) ev.push({ time: now, msg: `Water level low (${mapped.water}%)` });
-
-      if (mapped.rain === "1") ev.push({ time: now, msg: "Rain detected" });
-
-      ev.push({ time: now, msg: mapped.pump === "1" ? "Pump ON" : "Pump OFF" });
-
-      setAlerts((p) => [...ev, ...p].slice(0, 5));
-
-      lastUpdateRef.current = Date.now();
-      setSecondsSince(0);
 
     } catch (e) {
       if (e.name !== "AbortError") console.error(e);
     }
   };
 
-  /* -------- Auto Refresh -------- */
   useEffect(() => {
     fetchFeeds();
     const id = setInterval(fetchFeeds, REFRESH_MS);
-    return () => {
-      clearInterval(id);
-      if (abortRef.current) abortRef.current.abort();
-    };
+    return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    const t = setInterval(() => {
-      if (lastUpdateRef.current)
-        setSecondsSince(Math.floor((Date.now() - lastUpdateRef.current) / 1000));
-    }, 1000);
-    return () => clearInterval(t);
-  }, []);
+  /* -------- STATUS LOGIC -------- */
 
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
+  const soilStatus =
+    latest.soil < 30 ? "low" :
+    latest.soil > 80 ? "high" : "normal";
+
+  const pumpStatus =
+    latest.pump === "1" ? "pump-on" : "pump-off";
+
+  // 🔥 CSS CLASS CONTROL (IMPORTANT)
+  const obstacleClass =
+    obstacleLabel === "EMERGENCY"
+      ? "emergency"
+      : obstacleLabel === "Object Detected"
+      ? "obstacle-detected"
+      : "";
+
+  /* -------------------------------- */
 
   return (
-    <div className={dark ? "monitor dark-mode" : "monitor light-mode"}>
+    <div className="monitor">
 
       {/* HEADER */}
       <div className="monitor-header">
         <div>
           <h1>AGRO Monitoring</h1>
           <div className="subtitle">
-            Last update: {shortTime(latest.updated)} — {secondsSince}s ago
+            Last update: {shortTime(latest.updated)}
           </div>
         </div>
-
-        <div className="header-actions">
-          <button className="mode-btn" onClick={() => setDark((x) => !x)}>
-            {dark ? "Light Mode" : "Dark Mode"}
-          </button>
-          <button className="mode-btn" onClick={() => fetchFeeds()}>
-            Refresh Now
-          </button>
-        </div>
       </div>
-
-      {/* ALERTS */}
-      <section className="alerts-section">
-        <h3>Recent Alerts</h3>
-        <div className="alerts-table-wrap">
-          <table className="alerts-table">
-            <thead>
-              <tr><th>Time</th><th>Alert</th></tr>
-            </thead>
-            <tbody>
-              {alerts.length === 0
-                ? <tr><td colSpan="2">No alerts</td></tr>
-                : alerts.map((a, i) => (
-                    <tr key={i}><td>{a.time}</td><td>{a.msg}</td></tr>
-                  ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
 
       {/* TOP CARDS */}
       <section className="top-cards">
         <div className="cards-grid">
 
-          <button className="card compact" onClick={() => scrollTo("soil-graph")}>
+          {/* SOIL */}
+          <button className={`card compact ${soilStatus}`}>
             <FaLeaf className="icon" />
             <div className="label">Soil</div>
             <div className="card-value">{latest.soil}%</div>
+            <div className={`card-status ${soilStatus}`}>
+              {soilStatus.toUpperCase()}
+            </div>
           </button>
 
-          <button className="card compact" onClick={() => scrollTo("temp-graph")}>
+          {/* TEMP */}
+          <button className="card compact">
             <FaTemperatureHigh className="icon" />
             <div className="label">Temp</div>
             <div className="card-value">{latest.temp}°C</div>
           </button>
 
-          <button className="card compact" onClick={() => scrollTo("humidity-graph")}>
+          {/* HUMIDITY */}
+          <button className="card compact">
             <FaTint className="icon" />
             <div className="label">Humidity</div>
             <div className="card-value">{latest.humidity}%</div>
           </button>
 
-          <button className="card compact" onClick={() => scrollTo("sun-graph")}>
+          {/* SUNLIGHT */}
+          <button className="card compact">
             <FaSun className="icon" />
             <div className="label">Sunlight</div>
             <div className="card-value">{latest.sunlight}%</div>
           </button>
 
-          <button className="card compact" onClick={() => scrollTo("pump-graph")}>
+          {/* PUMP */}
+          <button className={`card compact ${pumpStatus}`}>
             <FaPowerOff className="icon" />
             <div className="label">Pump</div>
             <div className="card-value">
@@ -220,7 +192,8 @@ export default function Monitoring() {
             </div>
           </button>
 
-          <button className="card compact" onClick={() => scrollTo("rain-graph")}>
+          {/* RAIN */}
+          <button className="card compact">
             <FaCloudRain className="icon" />
             <div className="label">Rain</div>
             <div className="card-value">
@@ -228,20 +201,33 @@ export default function Monitoring() {
             </div>
           </button>
 
-          <button className="card compact" onClick={() => scrollTo("water-graph")}>
+          {/* WATER */}
+          <button className="card compact">
             <FaWater className="icon" />
             <div className="label">Water</div>
             <div className="card-value">{latest.water}%</div>
           </button>
 
+          {/* 🚨 OBSTACLE */}
+          <button className={`card compact ${obstacleClass}`}>
+            <div className="icon">📏</div>
+            <div className="label">Obstacle</div>
+
+            <div className="card-value">
+              {obstacleLabel}
+            </div>
+
+            <div className={`card-status ${obstacleClass}`}>
+              {latest.distance} cm
+            </div>
+          </button>
+
         </div>
       </section>
 
-      {/* GRAPHS */}
+      {/* GRAPH */}
       <main className="graphs-wrapper">
-
-        {/* SOIL */}
-        <section id="soil-graph" className="graph-section">
+        <section className="graph-section">
           <h3>Soil Moisture</h3>
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={chartData}>
@@ -253,92 +239,8 @@ export default function Monitoring() {
             </LineChart>
           </ResponsiveContainer>
         </section>
-
-        {/* TEMP */}
-        <section id="temp-graph" className="graph-section">
-          <h3>Temperature</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="temp" stroke="#ff6b3d" dot={false}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
-
-        {/* HUMIDITY */}
-        <section id="humidity-graph" className="graph-section">
-          <h3>Humidity</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={[0, 100]} />
-              <Tooltip />
-              <Line type="monotone" dataKey="humidity" stroke="#1976D2" dot={false}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
-
-        {/* SUNLIGHT */}
-        <section id="sun-graph" className="graph-section">
-          <h3>Sunlight</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={[0, 100]} />
-              <Tooltip />
-              <Line type="monotone" dataKey="sunlight" stroke="#FBC02D" dot={false}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
-
-        {/* PUMP */}
-        <section id="pump-graph" className="graph-section">
-          <h3>Pump Status</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={[0, 1]} />
-              <Tooltip />
-              <Line type="stepAfter" dataKey="rain" stroke="#777" dot={false}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
-
-        {/* RAIN */}
-        <section id="rain-graph" className="graph-section">
-          <h3>Rain Sensor</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={[0, 1]} />
-              <Tooltip />
-              <Line type="stepAfter" dataKey="rain" stroke="#0288D1" dot={false}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
-
-        {/* WATER LEVEL */}
-        <section id="water-graph" className="graph-section">
-          <h3>Water Level</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={[0, 100]} />
-              <Tooltip />
-              <Line type="monotone" dataKey="water" stroke="#009688" dot={false}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
-
       </main>
+
     </div>
   );
 }

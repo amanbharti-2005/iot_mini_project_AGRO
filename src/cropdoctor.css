@@ -1,0 +1,66 @@
+:root {
+  --p: #1b5e20;
+  --bg-overlay: rgba(240, 242, 245, 0.85);
+  --white: #ffffff;
+}
+
+/* NATURE BACKGROUND PATTERN */
+.leaf-bg {
+  background-color: #e8f5e9;
+  background-image: url("https://www.transparenttextures.com/patterns/leaf.png");
+  background-attachment: fixed;
+}
+
+.main-layout { display: flex; gap: 20px; padding: 20px; max-width: 1300px; margin: auto; min-height: 100vh; }
+
+.crop-container { 
+  flex: 3; 
+  background: var(--bg-overlay); 
+  padding: 30px; 
+  border-radius: 20px; 
+  backdrop-filter: blur(5px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.hero h1 { margin: 0 0 20px 0; color: var(--p); font-size: 2.2rem; border-left: 5px solid var(--p); padding-left: 15px; }
+
+/* COMPACT SENSORS */
+.sensor-strip { display: flex; gap: 10px; margin-bottom: 25px; }
+.s-pill { padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; color: white; display: flex; align-items: center; gap: 5px; }
+.t-pill { background: #e64a19; }
+.h-pill { background: #1976d2; }
+.stat-pill { background: white; color: #333; border: 1px solid #ddd; min-width: 180px; justify-content: center; }
+.s-good { border-color: #2e7d32; color: #2e7d32; font-weight: bold; }
+.s-bad { border-color: #d32f2f; color: #d32f2f; }
+
+/* SELECTION CARDS */
+.filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+.filter-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.filter-card label { display: block; font-size: 0.8rem; font-weight: bold; color: #666; margin-bottom: 5px; }
+.dropdown-select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; outline: none; }
+
+/* DASHBOARD CARDS */
+.top-row { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
+.v-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+.v-card h3 { color: var(--p); margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.soil-info { display: inline-block; margin-top: 15px; background: #c8e6c9; color: #1b5e20; padding: 5px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
+
+.p-box { background: #f1f8e9; padding: 20px; border-radius: 12px; text-align: center; margin-top: 15px; border: 1px solid #c8e6c9; }
+.p-box h2 { color: var(--p); margin: 0; font-size: 2rem; }
+
+.disease-box { margin-top: 20px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+.d-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+.d-card { background: #fff5f5; padding: 15px; border-radius: 8px; border-left: 4px solid #d32f2f; }
+.d-card h4 { margin: 0 0 5px 0; color: #d32f2f; }
+
+/* CHATBOX */
+.chat-box { flex: 1; background: white; height: 85vh; border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.chat-header { background: var(--p); color: white; padding: 15px; font-weight: bold; text-align: center; }
+.chat-content { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fafafa; }
+.msg-bubble { background: #e3f2fd; padding: 10px; border-radius: 8px; font-size: 0.85rem; }
+.bot-m { background: #e8f5e9; border-left: 4px solid var(--p); }
+.faq-section { padding: 10px; background: white; }
+.faq-btn { width: 100%; text-align: left; padding: 10px; margin-bottom: 5px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+.faq-btn:hover { background: #e8f5e9; }
+
+@media (max-width: 1000px) { .main-layout { flex-direction: column; } .top-row, .d-grid, .filter-row { grid-template-columns: 1fr; } }

@@ -16,6 +16,7 @@ export default function Navbar() {
         <NavLink to="/" end>Home</NavLink>
         <NavLink to="/about">About</NavLink>
         <NavLink to="/monitoring">Monitoring</NavLink>
+        <NavLink to="/cropdoctor">Crop Doctor</NavLink>
         <NavLink to="/login">Login</NavLink>
 
         {/* Mode Label + Toggle */}

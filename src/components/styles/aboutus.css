@@ -1,272 +1,264 @@
 /* --------------------------------------------------
-   RESET
--------------------------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body, html, #root {
-  font-family: "Poppins", sans-serif;
-  scroll-behavior: smooth;
-}
-
-/* --------------------------------------------------
-   LIGHT MODE DEFAULTS
+ROOT VARIABLES (Global Palette)
 -------------------------------------------------- */
 :root {
-  --page-bg: #f8f9fa;
-  --text-main: #333;
+  /* DARK MODE (Obsidian Aesthetic) */
+  --bg-body: #050505;
+  --bg-card: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --accent: #10b981; 
+  --accent-glow: rgba(16, 185, 129, 0.15);
+  --border: #1a1a1a;
+  --shadow: 0 10px 30px rgba(0,0,0,0.5);
 
-  --card-bg: #ffffff;
-  --card-text: #154b2c;
-  --card-desc: #555;
+  /* EXTRA GREEN SHADES */
+  --accent-soft: rgba(16, 185, 129, 0.08);
+  --accent-strong: #059669;
+}
 
-  --sensor-card-bg: #ffffff;
-  --sensor-card-text: #154b2c;
+[data-theme='light'] {
+  /* LIGHT MODE (Clean Professional Aesthetic) */
+  --bg-body: #f4f7f6;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
 
-  --why-bg: #d4f3e2;
-  --why-text: #154b2c;
+  /* ENHANCED GREEN PALETTE */
+  --accent: #16a34a;
+  --accent-glow: rgba(22, 163, 74, 0.15);
+  --accent-soft: rgba(22, 163, 74, 0.08);
+  --accent-strong: #15803d;
+
+  --border: #e2e8f0;
+  --shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 /* --------------------------------------------------
-   DARK MODE VARIABLES (GREEN BLACK THEME)
+BASE STYLES
 -------------------------------------------------- */
-.dark {
-  --page-bg: linear-gradient(135deg, #021f12, #063d22, #0a6b3a);
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  --text-main: #eaffea;
-
-  /* Cards → Deep green-black */
-  --card-bg: #0d1f16;
-  --card-text: #4ade80;
-  --card-desc: #c6ffcf;
-
-  /* Sensor cards → green-tinted dark */
-  --sensor-card-bg: #0f221a;
-  --sensor-card-text: #4ade80;
-
-  /* Why section cards */
-  --why-bg: #0f221a;
-  --why-text: #e5ffe9;
+body {
+  font-family: 'Inter', 'Poppins', sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  transition: background 0.4s ease, color 0.4s ease;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* Apply DARK mode background */
-body.dark {
-  background: var(--page-bg);
+/* GLOBAL SMOOTH TRANSITIONS */
+* {
+  transition: background 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease, 
+              box-shadow 0.3s ease, 
+              transform 0.3s ease;
 }
 
-/* --------------------------------------------------
-   ABOUT SECTION
--------------------------------------------------- */
 .about-section {
-  width: 100%;
-  padding: 60px 20px;
+  padding: 80px 5%;
+  max-width: 1200px;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  gap: 50px;
-  text-align: center;
-  background: var(--page-bg);
-  transition: 0.4s ease;
+  gap: 100px; /* increased spacing between sections */
 }
 
+/* --------------------------------------------------
+THEME TOGGLE
+-------------------------------------------------- */
+.theme-toggle-container {
+  position: fixed; 
+  top: 30px; 
+  right: 5%; 
+  z-index: 1000;
+}
+
+.toggle-btn {
+  padding: 12px 24px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.toggle-btn:hover {
+  box-shadow: 0 6px 25px var(--accent-glow);
+}
+
+.toggle-btn:active { transform: scale(0.95); }
+
+/* --------------------------------------------------
+HERO SECTION
+-------------------------------------------------- */
 .about-card {
-  max-width: 1100px;
-  margin: auto;
-  background: var(--card-bg);
-  padding: 50px 30px;
-  border-radius: 25px;
-  box-shadow: 0 15px 50px rgba(0,0,0,0.45);
-  transition: 0.4s ease;
+  padding: 80px 40px;
+  border-radius: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
 }
 
-.about-card:hover {
-  background: #12281d;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+.about-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent-soft);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.about-card:hover::before {
+  opacity: 1;
 }
 
 .about-title {
-  font-size: 46px;
-  font-weight: 900;
-  color: var(--card-text);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--accent);
   margin-bottom: 20px;
 }
 
 .about-desc {
-  max-width: 780px;
-  margin: auto;
-  font-size: 19px;
-  color: var(--card-desc);
-  line-height: 1.8;
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 /* --------------------------------------------------
-   SENSOR SECTION
+SECTIONS
 -------------------------------------------------- */
+.feature-section, 
 .sensor-section {
-  max-width: 1200px;
-  margin: auto;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
 
 .sub-heading {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--sensor-card-text);
-  margin-bottom: 40px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
+/* --------------------------------------------------
+SENSOR GRID (FORCED 2 PER ROW)
+-------------------------------------------------- */
 .sensor-grid {
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* EXACTLY 2 per row */
   gap: 30px;
-  overflow-x: auto;
-  padding: 15px;
+}
+
+/* responsive fallback */
+@media (max-width: 768px) {
+  .sensor-grid {
+    grid-template-columns: 1fr; /* mobile = 1 */
+  }
 }
 
 .sensor-card {
-  background: var(--sensor-card-bg);
-  color: var(--sensor-card-text);
-  padding: 35px 20px;
-  border-radius: 28px;
-  min-width: 230px;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.45);
-  transition: 0.35s ease;
+  padding: 40px;
+  border-radius: 30px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.sensor-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent-soft);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.sensor-card:hover::before {
+  opacity: 1;
 }
 
 .sensor-card:hover {
-  transform: translateY(-8px);
-  background: #153728;
-  box-shadow: 0 18px 45px rgba(0,0,0,0.65);
+  transform: translateY(-12px) scale(1.02);
+  border-color: var(--accent);
+  box-shadow: 0 20px 40px var(--accent-glow);
 }
 
-.sensor-card .icon {
-  font-size: 46px;
-  color: var(--sensor-card-text);
-  margin-bottom: 15px;
+.icon { 
+  margin-bottom: 25px; 
+  color: var(--accent); 
 }
 
-.sensor-card h4 {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--sensor-card-text);
-  margin-bottom: 12px;
+.sensor-card:hover .icon {
+  transform: scale(1.2);
 }
 
-.sensor-card p {
-  font-size: 16px;
-  color: var(--card-desc);
-  line-height: 1.6;
+.sensor-card h4 { 
+  font-size: 1.5rem; 
+  margin-bottom: 15px; 
+}
+
+.sensor-card p { 
+  font-size: 1rem; 
+  color: var(--text-secondary); 
 }
 
 /* --------------------------------------------------
-   WHY CHOOSE AGRO
+CAPABILITIES SECTION (EXTRA GAP FIX)
 -------------------------------------------------- */
 .why-section {
-  width: 100%;
-  padding: 80px 40px;
-  background: var(--page-bg);
-  text-align: center;
-}
-
-.why-section .sub-heading {
-  font-size: 44px;
-  font-weight: 900;
-  color: var(--sensor-card-text);
-  margin-bottom: 60px;
+  margin-top: 40px; /* added gap from previous section */
 }
 
 .why-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
   list-style: none;
-  max-width: 1000px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+  margin-top: 20px; /* spacing below heading */
 }
 
 .why-list li {
+  padding: 30px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 25px;
   display: flex;
   align-items: center;
   gap: 20px;
-  background: var(--why-bg);
-  padding: 25px 30px;
-  border-radius: 22px;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--why-text);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.45);
-  transition: 0.3s ease;
+  font-weight: 500;
 }
 
 .why-list li:hover {
-  transform: translateY(-5px);
-  background: #153728;
+  transform: translateX(10px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px var(--accent-glow);
 }
 
 .check-icon {
-  font-size: 28px;
-  color: #4ade80;
-  width: 45px;
-  height: 45px;
-  background: rgba(50,200,120,0.25);
+  flex-shrink: 0;
+  width: 50px; 
+  height: 50px;
   border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.5rem;
 }
 
-/* --------------------------------------------------
-   FADE ANIMATION
--------------------------------------------------- */
-.fade-in {
-  opacity: 0;
-  animation: fadeUp 0.9s ease forwards;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --------------------------------------------------
-   RESPONSIVE
--------------------------------------------------- */
-@media (max-width: 768px) {
-  .about-title { font-size: 36px; }
-  .sub-heading { font-size: 30px; }
-  .why-section { padding: 50px 20px; }
-  .sensor-grid { gap: 20px; }
-}
-
-/* Make ONLY the text inside the WHY tiles white on hover */
-.why-list li:hover {
-  color: #ffffff !important;
-}
-
-/* Ensure check icon stays light green (does NOT turn white) */
 .why-list li:hover .check-icon {
-  color: #4ade80 !important;          /* keep light green */
-  background: rgba(50,200,120,0.25);   /* keep original light green background */
-}
-/* Hover styling for SENSOR CARDS */
-.sensor-card:hover .icon {
-  color: #4ade80 !important;
-}
-
-.sensor-card:hover h4 {
-  color: #4ade80 !important;
-}
-
-.sensor-card:hover p {
-  color: #ffffff !important;
-}
-/* ABOUT AGRO Hover Effects */
-.about-card:hover .about-title {
-  color: #39a560 !important;   /* Light green heading */
-}
-
-.about-card:hover .about-desc {
-  color: #ffffff !important;   /* White paragraph text */
+  transform: scale(1.1);
 }

@@ -3,6 +3,12 @@
 
 /* ================= NAVBAR ================= */
 .navbar {
+  position: fixed;   /* ADD */
+  top: 0;            /* ADD */
+  left: 0;           /* ADD */
+  width: 100%;       /* ADD */
+  z-index: 1000;     /* ADD */
+  height: var(--navbar-height);
   display: flex;
   justify-content: space-between;
   align-items: center;

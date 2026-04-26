@@ -5,18 +5,25 @@
 .profile-bar {
   width: 100%;
   background: var(--card-bg);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 25px;
+
+  padding: 12px 25px;
+  min-height: 60px;
+
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.10);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+
+  position: fixed;     /* CHANGE: sticky → fixed */
+  top: var(--navbar-height);  /* not hardcoded */
+  height: var(--profile-height);
+
+  z-index: 999;
+
   border-bottom: 2px solid var(--border-color);
   transition: background 0.3s ease, color 0.3s ease;
 }
-
 /* User name/email text */
 .profile-name {
   font-size: 15px;

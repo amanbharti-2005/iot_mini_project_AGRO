@@ -1,210 +1,683 @@
-/* --------------------------------------------------
-   RESET
--------------------------------------------------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root {
+  --bg-dark: #020305;
+  --primary-green: #22c55e;
+  --secondary-green: #15803d;
+  --text-main: #ffffff;
+  --text-dim: #f5f7f9;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --header-height: 150px;
 }
 
-body, html, #root {
-  font-family: "Poppins", sans-serif;
-  background: #2fbf71;
-  transition: background 0.3s ease;
+/* LIGHT MODE FIX */
+[data-theme="light"] {
+  --bg-dark: #f4f7f6;
+  --text-main: #1e293b;
+  --text-dim: #475569;
+  --glass-border: rgba(0,0,0,0.08);
 }
 
-/* --------------------------------------------------
-   DARK MODE
--------------------------------------------------- */
-.dark body, 
-.dark #root {
-  background: #0f1e14 !important;
-}
 
-/* --------------------------------------------------
-   HOME CONTAINER (CENTERED CONTENT)
--------------------------------------------------- */
+
+/* Base style for the entire page to handle scrolling from section to section */
 .home-container {
   width: 100%;
-  min-height: calc(80vh - 110px);
-  padding-top: 40px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
-
-  padding-bottom: 60px;
-  transition: color 0.3s ease;
-}
-
-/* --------------------------------------------------
-   CATCHY TAGLINE — NEW FONT + BURST UP ANIMATION
--------------------------------------------------- */
-/* --------------------------------------------------
-   LETTER-BY-LETTER BURST ANIMATION
--------------------------------------------------- */
-
-.tagline {
-  font-family: "Montserrat", sans-serif;
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: #ffffff;
-  margin-bottom: 40px;
-  text-align: center;
-  display: inline-block;
-}
-
-.dark .tagline {
-  color: #eaffea;
-}
-
-.burst-letter {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(20px) scale(0.8);
-  animation: burstLetter 0.55s ease-out forwards;
-}
-
-@keyframes burstLetter {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.7);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-18px) scale(1.15);
-  }
-  80% {
-    transform: translateY(5px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* --------------------------------------------------
-   IMAGE + GLOW
--------------------------------------------------- */
-.image-wrapper {
+  min-height: 100vh;
   position: relative;
-  width: min(60vw, 450px);
-  height: min(60vw, 450px);
-  min-width: 260px;
-  min-height: 260px;
+  overflow-x: hidden; /* Avoid horizontal scrollbar from effects */
+  background: var(--bg-dark); /* Base dark background */
+}
 
+
+/* The hero section no longer handles its own full min-height to enable scrolling */
+.home-portal {
+  width: 100%;
+  padding:60px 0 50px 0; /* Add padding to prevent content from hitting page top/bottom */
+  display: flex;
+  padding-top: 90px; 
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  position: relative;
+}
+
+/* --- 🟢 NEW: INTENSE NEBULA PULSE BACKGROUND --- */
+.nebula-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Multiple intense green gradients */
+  background: radial-gradient(circle at 10% 10%, rgba(34, 197, 94, 0.15), transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(34, 197, 94, 0.1), transparent 50%),
+              radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.08), transparent 70%);
+  filter: blur(50px);
+  animation: nebulaPulse 15s infinite alternate ease-in-out;
+  z-index: 0; 
+}
+
+@keyframes nebulaPulse {
+  0% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(1deg); }
+  100% { opacity: 0.8; transform: scale(1.05) rotate(-1deg); }
+}
+
+/* --- 🟢 NEW: ULTRA-GLOWING COMETS --- */
+.comets {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; 
+}
+
+.comets span {
+  position: absolute;
+  width: 3px; /* Slightly wider for better visibility */
+  height: 100px;
+  /* Strong green and white gradients */
+  background: linear-gradient(to bottom, rgba(34, 197, 94, 0), var(--primary-green), #fff);
+  border-radius: 50%;
+  opacity: 0;
+  transform: rotate(-35deg); 
+  filter: blur(2px);
+  /* New strong glowing box-shadow */
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 25px var(--primary-green);
+}
+
+.comet-1 { top: -10%; left: 30%; animation: cometRun 8s infinite 1s; }
+.comet-2 { top: -20%; left: 70%; animation: cometRun 12s infinite 4s; }
+.comet-3 { top: -15%; left: 95%; animation: cometRun 10s infinite 7s; }
+
+@keyframes cometRun {
+  0% { transform: translateY(-200px) rotate(-35deg); opacity: 0; }
+  10% { opacity: 0.9; } /* Higher opacity when flying */
+  30% { transform: translateY(120vh) translateX(-50vw) rotate(-35deg); opacity: 0; }
+  100% { transform: translateY(120vh) translateX(-50vw) rotate(-35deg); opacity: 0; }
+}
+
+/* CURSOR & PARTICLES */
+.cursor-glow {
+  position: absolute; 
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.08), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2; 
+  filter: blur(20px);
+}
+
+.particles span {
+  position: absolute;
+  background: var(--primary-green);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.8); 
+  animation: float 12s infinite linear;
+  bottom: -10px;
+  z-index: 2;
+}
+
+@keyframes float {
+  0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
+  10% { opacity: inherit; } 
+  100% { transform: translateY(-110vh) scale(0.5) rotate(360deg); opacity: 0; }
+}
+
+/* LAYOUT */
+.main-content {
+  max-width: 1200px;
+  width: 90%;
+  z-index: 10; 
+  position: relative;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* --- TYPOGRAPHY & TEXT GLOWS --- */
+
+/* Badge has its own unique glow effect */
+.badge-glow {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 100px;
+  color: var(--primary-green);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  /* Strong green text shadow for a unique badge glow */
+  text-shadow: 0 0 15px rgba(34, 197, 94, 0.8), 0 0 25px rgba(34, 197, 94, 0.4);
+}
+/* REMOVE GLOW IN LIGHT MODE (important) */
+[data-theme="light"] .glow-white,
+[data-theme="light"] .glow-white-subtle {
+  text-shadow: none;
+}
+
+/* improve readability */
+[data-theme="light"] .features-list div {
+  background: rgba(0,0,0,0.03);
+  color: var(--text-main);
+}
+
+[data-theme="light"] .info-card {
+  background: #ffffff;
+  border: 1px solid var(--glass-border);
+}
+
+[data-theme="light"] .info-card p {
+  color: var(--text-dim);
+}
+
+[data-theme="light"] .glass-container {
+  background: #ffffff;
+}
+
+/* Separate class for title logo glow effect */
+.title-logo-glow {
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 20px;
+  background: linear-gradient(to bottom, #fff, #888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Green text shadow specifically for the title */
+  text-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 0 25px rgba(34, 197, 94, 0.3);
+}
+
+.accent-dot {
+  -webkit-text-fill-color: var(--primary-green);
+  text-shadow: 0 0 20px rgba(34, 197, 94, 1);
+}
+
+/* White text glow class */
+.glow-white {
+  /* Combine white and slight green text shadow */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 15px rgba(34, 197, 94, 0.2);
+}
+
+/* White text shadow specifically for dimmest text */
+.glow-white-subtle {
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3), 0 0 12px rgba(34, 197, 94, 0.1);
+}
+
+.tagline-modern {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+
+.highlight-text {
+  color: var(--primary-green);
+}
+
+.project-description {
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin: 20px 0 30px;
+  max-width: 500px;
+}
+
+/* FEATURES */
+.features-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.features-list div {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.features-list div:hover {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.3);
+  transform: translateY(-2px);
+}
+
+/* BUTTON & HINT */
+.cta-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.get-started-btn {
+  background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+  color: white;
+  padding: 16px 36px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.scroll-hint {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+
+/* VISUALS (RIGHT SIDE) */
+.visual-section {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  animation: fadeInScale 1.4s ease forwards;
 }
 
-.glow-circle {
-  position: absolute;
+/* ===== BIGGER RIGHT LOGO (NO LAYOUT CHANGE) ===== */
+
+.glass-container {
+  position: relative;
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
+  aspect-ratio: 1/1;
 
-  background: rgba(255, 255, 255, 0.15);
+  min-height: 520px;
+  max-height: 600px;
 
-  box-shadow:
-    0 0 80px rgba(255, 255, 255, 0.6),
-    0 0 200px rgba(255, 255, 255, 0.3),
-    0 0 300px rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 50px;
+  backdrop-filter: blur(15px);
 
-  animation: rotateGlow 12s linear infinite,
-             pulseGlow 3s ease-in-out infinite;
-  z-index: 1;
+  display: flex;
+  align-items: flex-start;   /* ⬅️ KEY CHANGE (was center) */
+  justify-content: center;
+
+  padding-top: 20px;         /* ⬅️ pushes image slightly down from top */
+
+  transform-style: preserve-3d;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
-/* Dark Mode Glow */
-.dark .glow-circle {
-  background: rgba(180, 255, 180, 0.12);
-  box-shadow:
-    0 0 60px rgba(120, 255, 120, 0.4),
-    0 0 140px rgba(120, 255, 120, 0.25);
-}
-
-/* Farmer Image Animation */
-.farmer-image {
-  width: 70%;
+.main-character {
+   margin-top: -10px; 
+  width: 95%;              /* ⬅️ BIGGER IMAGE */
   height: auto;
+  max-height: 520px;       /* ⬅️ KEEP INSIDE BOX */
+
   object-fit: contain;
-  z-index: 2;
-
-  opacity: 0;
-  transform: translateY(20px) scale(0.9);
-  animation: imageEnter 1.3s ease-out forwards 0.3s;
+  filter: drop-shadow(0 25px 60px rgba(0,0,0,0.6));
+  z-index: 5;
 }
 
-.dark .farmer-image {
-  filter: drop-shadow(0 0 4px rgba(120, 255, 120, 0.4));
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-/* --------------------------------------------------
-   TEXT — LEFT TO RIGHT FILL ANIMATION
--------------------------------------------------- */
-.welcome-text {
-  font-size: clamp(28px, 6vw, 60px);
-  font-weight: 900;
-  margin-top: 35px;
-  text-transform: uppercase;
-
-  color: transparent;
-  -webkit-text-stroke: 2px white;
-
-  background: linear-gradient(90deg, white 50%, transparent 50%);
-  background-size: 200% 100%;
-  background-position: 100% 0;
-
-  -webkit-background-clip: text;
-          background-clip: text;
-
-  animation: textFill 3s linear infinite,
-             textSlideUp 1s ease-out forwards 0.8s;
+.ring-1 {
+  width: 110%;
+  height: 110%;
+  border: 1px dashed rgba(34, 197, 94, 0.3);
+  animation: spin 30s linear infinite;
 }
 
-.dark .welcome-text {
-  -webkit-text-stroke: 2px #bfffba;
-  background: linear-gradient(90deg, #bfffba 50%, transparent 50%);
-  background-size: 200% 100%;
+.ring-2 {
+  width: 130%;
+  height: 130%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: spin 50s linear reverse infinite;
 }
 
-/* --------------------------------------------------
-   ANIMATIONS
--------------------------------------------------- */
-@keyframes rotateGlow {
+.pulse-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.4), transparent 70%);
+  filter: blur(20px);
+  animation: pulse 4s infinite alternate;
+}
+
+@keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-@keyframes pulseGlow {
-  0% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.05); opacity: 1; }
- 100% { transform: scale(1); opacity: 0.9; }
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(1.8); opacity: 0.6; }
 }
 
-@keyframes fadeInScale {
-  0% { opacity: 0; transform: scale(0.85); }
-  100% { opacity: 1; transform: scale(1); }
+/* --- 🟢 NEW: STICKY HEADER FIXES --- */
+
+/* Base profile bar style - Ensure high z-index and stickiness */
+.top-header-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* Example height */
+  background: rgba(2, 3, 5, 0.9); /* Dark background with transparency */
+  backdrop-filter: blur(10px); /* Glassmorphism blur on sticky bar */
+  z-index: 1000; /* Very high z-index to stay above content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
 }
 
-@keyframes imageEnter {
-  0% { opacity: 0; transform: translateY(20px) scale(0.9); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+/* IoT Smart Agriculture text - Set color explicitly and add glow */
+.header-title {
+  color: var(--primary-green) !important;
+  font-weight: bold;
+  font-size: 1.1rem;
+  /* Intense green glow for the header text */
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.8), 0 0 20px rgba(34, 197, 94, 0.4);
 }
 
-@keyframes textSlideUp {
-  0% { opacity: 0; transform: translateY(30px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* User profile bar on the left */
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-@keyframes textFill {
-  0%   { background-position: 100% 0; }
-  50%  { background-position: 0% 0; }
-  100% { background-position: 100% 0; }
+/* Red Logout button */
+.header-logout {
+  background: red;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+[data-theme="light"] .top-header-bar {
+  background: rgba(255,255,255,0.9);
+}
+
+/* Base style for the Profile/IOT Smart Agriculture container - High z-index */
+.profile-bar-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Base style for the Profile/IOT Smart Agriculture container - Apply glow-white class to user name text */
+.profile-user-name {
+  color: var(--text-main);
+  font-weight: bold;
+}
+
+/* Example CSS style for profile avatar image */
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* --- NEW: ABOUT SECTION STYLE --- */
+.about-section {
+  width: 100%;
+  padding: 150px 0; /* Add top padding to create space from header */
+  background: rgba(255, 255, 255, 0.02); /* Slight variation from base dark */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--glass-border); /* Subtle separator */
+}
+
+.about-text-container {
+  max-width: 800px;
+  text-align: center;
+}
+
+/* About Us section white text already glows via the glow-white class on h2 */
+
+/* Dimmest text has subtle white glow */
+.about-text-container p {
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.info-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.info-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  padding: 18px;
+  border-radius: 15px;
+  transition: 0.3s;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  background: rgba(74,222,128,0.15);
+}
+
+.info-card h4 {
+  color: #4ade80;
+  margin-bottom: 8px;
+}
+
+.info-card p {
+  font-size: 14px;
+  color: #d1fae5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 968px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+  .text-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .project-description {
+    margin: 20px auto;
+  }
+  .features-list {
+    width: 100%;
+  }
+}
+/* =====================================================
+🔥 ANIMATION & MICRO-INTERACTION IMPROVEMENTS (APPENDED)
+===================================================== */
+
+/* smoother global transitions (non-destructive) */
+* {
+  transition: all 0.25s ease;
+}
+
+/* smoother scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---- NEBULA IMPROVED ---- */
+.nebula-bg {
+  filter: blur(60px);
+  animation: nebulaPulseSmooth 18s infinite alternate ease-in-out;
+}
+
+@keyframes nebulaPulseSmooth {
+  0% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.08); }
+  100% { opacity: 0.7; transform: scale(1.04); }
+}
+
+/* ---- COMETS MORE NATURAL ---- */
+.comets span {
+  animation-timing-function: ease-in-out;
+  opacity: 0.85;
+}
+
+/* ---- CARDS INTERACTION ---- */
+.features-list div:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.15);
+}
+
+.info-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(34, 197, 94, 0.15);
+}
+
+/* ---- BUTTON FEEDBACK ---- */
+.get-started-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+}
+
+.get-started-btn:active {
+  transform: scale(0.96);
+}
+/* ===== FULL WIDTH VIDEO (NO STRUCTURE CHANGE) ===== */
+
+.demo-section {
+  margin-top: 60px;   /* slightly tighter */
+  padding: 0;
+  text-align: center;
+}
+
+.demo-video-container {
+  width: 95%;         /* ⬅️ FULL PAGE FEEL */
+  max-width: none;    /* ⬅️ REMOVE LIMIT */
+  margin: 0 auto;
+
+  border-radius: 28px;
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+
+  box-shadow: 0 35px 100px rgba(0,0,0,0.7);
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.demo-video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* smooth hover */
+.demo-video-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 45px 120px rgba(0,0,0,0.85);
+}
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+  .demo-video-container {
+    width: 95%;
+    border-radius: 18px;
+  }
+
+  .demo-heading {
+    font-size: 1.8rem;
+  }
+}
+/* ---- FLOATING IMAGE EFFECT ---- */
+.glass-container {
+  animation: floatCard 6s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* ---- TEXT ENTRY ANIMATION ---- */
+.title-logo-glow,
+.tagline-modern,
+.project-description {
+  animation: fadeUp 1s ease forwards;
+  opacity: 0;
+}
+
+.title-logo-glow { animation-delay: 0.2s; }
+.tagline-modern { animation-delay: 0.4s; }
+.project-description { animation-delay: 0.6s; }
+
+@keyframes fadeUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ---- HEADER POLISH ---- */
+.top-header-bar {
+  transition: box-shadow 0.3s ease;
+}
+
+.top-header-bar:hover {
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+/* ---- SCROLL HINT ---- */
+.scroll-hint {
+  animation: pulseHint 2s infinite ease-in-out;
+}
+
+@keyframes pulseHint {
+  0%,100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+/* ===== RIGHT SECTION STACK (LOGO + VIDEO) ===== */
+
+/* make right side vertical */
+.visual-section {
+  display: flex;
+  flex-direction: column;   /* ⬅️ stack items */
+  align-items: center;
+  justify-content: flex-start;
+  gap: 30px;                /* space between logo and video */
+}
+
+/* keep logo at top */
+.glass-container {
+  margin-bottom: 10px;
+}
+
+/* make video fit nicely under logo (right side only) */
+.visual-section .demo-section {
+  margin-top: 0;
+  width: 100%;
+}
+
+.visual-section .demo-video-container {
+  width: 100%;
+  max-width: 420px;   /* ⬅️ keeps it inside right column */
 }
