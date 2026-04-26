@@ -1,7 +1,8 @@
 import React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import farmerImage from "./assets/logo.png";
+import logo from "./assets/logo.png";
 import "./components/styles/homepage.css";
+import { CgLogOff } from "react-icons/cg";
 
 
 
@@ -137,10 +138,10 @@ return ( <div className="home-portal" onMouseMove={handleMouseMove} >
 >
   <div className="glass-container">
     <motion.img
-      src={farmerImage}
-      alt="Smart Agriculture Rover"
-      className="main-character"
-    />
+  src={logo}
+  alt="Smart Agriculture Rover"
+  className="main-character"
+/>
   </div>
 
   <div style={{ borderRadius: "20px", overflow: "hidden" }}>
