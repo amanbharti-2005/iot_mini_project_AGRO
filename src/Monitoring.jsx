@@ -1,4 +1,3 @@
-// src/Monitoring.jsx
 import React, { useEffect, useState, useRef } from "react";
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
@@ -12,12 +11,9 @@ import {
 
 import "./monitoring.css";
 
-/* ----------- ThingSpeak CONFIG ----------- */
 const CHANNEL_ID = 3185670;
 const READ_API_KEY = "X9JIBZ45ILK9KEJT";
-const HISTORY_POINTS = 50;
 const REFRESH_MS = 15000;
-/* ----------------------------------------- */
 
 const shortTime = (iso) =>
   iso ? new Date(iso).toLocaleTimeString() : "-";
@@ -27,87 +23,63 @@ export default function Monitoring() {
   const prevDistanceRef = useRef(0);
   const [obstacleLabel, setObstacleLabel] = useState("Clear");
 
+  // 🔥 DARK MODE STATE
+  const [dark, setDark] = useState(true);
+
   const [latest, setLatest] = useState({
-    soil: 0,
-    pump: "0",
-    temp: 0,
-    humidity: 0,
-    sunlight: 0,
-    rain: "0",
-    water: 0,
-    distance: 0,
-    updated: "-"
+    soil: 0, pump: "0", temp: 0, humidity: 0,
+    sunlight: 0, rain: "0", water: 0,
+    distance: 0, updated: "-"
   });
 
   const [chartData, setChartData] = useState([]);
-  const abortRef = useRef(null);
-
-  const buildUrl = (results = HISTORY_POINTS) =>
-    `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_API_KEY}&results=${results}`;
 
   const fetchFeeds = async () => {
-    if (abortRef.current) {
-      try { abortRef.current.abort(); } catch {}
-    }
+    const res = await fetch(
+      `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${READ_API_KEY}&results=50`
+    );
+    const data = await res.json();
+    const feeds = data.feeds;
+    const newest = feeds[feeds.length - 1];
 
-    abortRef.current = new AbortController();
+    const mapped = {
+      soil: Number(newest.field1),
+      pump: newest.field2,
+      temp: Number(newest.field3),
+      humidity: Number(newest.field4),
+      sunlight: Number(newest.field5),
+      water: Number(newest.field6),
+      rain: newest.field7,
+      distance: Number(newest.field8),
+      updated: newest.created_at
+    };
 
-    try {
-      const res = await fetch(buildUrl(), { cache: "no-store", signal: abortRef.current.signal });
-      const data = await res.json();
-      const feeds = data.feeds;
-      const newest = feeds[feeds.length - 1];
+    setLatest(mapped);
 
-      const mapped = {
-        soil: Number(newest.field1) || 0,
-        pump: newest.field2 === "1" ? "1" : "0",
-        temp: Number(newest.field3) || 0,
-        humidity: Number(newest.field4) || 0,
-        sunlight: Number(newest.field5) || 0,
-        water: Number(newest.field6) || 0,
-        rain: newest.field7 === "1" ? "1" : "0",
-        distance: Number(newest.field8) || 0,
-        updated: newest.created_at
-      };
+    // obstacle logic (UNCHANGED)
+    const prev = prevDistanceRef.current;
+    const curr = mapped.distance;
 
-      setLatest(mapped);
+    let label = "Clear";
 
-      // 🔥 FINAL OBSTACLE LOGIC
-      const prev = prevDistanceRef.current;
-      const curr = mapped.distance;
+    if (curr > 0 && curr <= 30) label = "EMERGENCY";
+    else if (prev === 0 && curr > 30) label = "Detected";
+    else if (curr > 30) label = "Object Detected";
 
-      let label = "Clear";
+    setObstacleLabel(label);
+    prevDistanceRef.current = curr;
 
-      if (curr > 0 && curr <= 30) {
-        label = "EMERGENCY";
-      } 
-      else if (prev === 0 && curr > 30) {
-        label = "Detected";   // only once
-      } 
-      else if (curr > 30) {
-        label = "Object Detected";
-      }
-
-      setObstacleLabel(label);
-      prevDistanceRef.current = curr;
-
-      const points = feeds.map((f) => ({
+    setChartData(
+      feeds.map(f => ({
         time: shortTime(f.created_at),
         soil: Number(f.field1),
         temp: Number(f.field3),
         humidity: Number(f.field4),
         sunlight: Number(f.field5),
         water: Number(f.field6),
-        rain: f.field7 === "1" ? 1 : 0,
-        pump: f.field2 === "1" ? 1 : 0,
         distance: Number(f.field8)
-      }));
-
-      setChartData(points);
-
-    } catch (e) {
-      if (e.name !== "AbortError") console.error(e);
-    }
+      }))
+    );
   };
 
   useEffect(() => {
@@ -116,131 +88,102 @@ export default function Monitoring() {
     return () => clearInterval(id);
   }, []);
 
-  /* -------- STATUS LOGIC -------- */
-
+  // status logic (UNCHANGED)
   const soilStatus =
     latest.soil < 30 ? "low" :
     latest.soil > 80 ? "high" : "normal";
 
   const pumpStatus =
-    latest.pump === "1" ? "pump-on" : "pump-off";
+    latest.pump === "1" ? "on" : "off";
 
-  // 🔥 CSS CLASS CONTROL (IMPORTANT)
   const obstacleClass =
-    obstacleLabel === "EMERGENCY"
-      ? "emergency"
-      : obstacleLabel === "Object Detected"
-      ? "obstacle-detected"
-      : "";
-
-  /* -------------------------------- */
+    obstacleLabel === "EMERGENCY" ? "emergency" :
+    obstacleLabel === "Object Detected" ? "detected" : "";
 
   return (
-    <div className="monitor">
+    <div className={`monitor ${dark ? "dark-mode" : "light-mode"}`}>
 
       {/* HEADER */}
-      <div className="monitor-header">
+      <div className="header">
         <div>
           <h1>AGRO Monitoring</h1>
-          <div className="subtitle">
-            Last update: {shortTime(latest.updated)}
-          </div>
+          <p className="subtitle">Last update: {shortTime(latest.updated)}</p>
         </div>
+
+        {/* 🔥 MODE SWITCH */}
+        <button className="mode-toggle" onClick={() => setDark(!dark)}>
+          {dark ? "☀ Light" : "🌙 Dark"}
+        </button>
       </div>
 
-      {/* TOP CARDS */}
-      <section className="top-cards">
-        <div className="cards-grid">
+      {/* CARDS */}
+      <div className="cards">
 
-          {/* SOIL */}
-          <button className={`card compact ${soilStatus}`}>
-            <FaLeaf className="icon" />
-            <div className="label">Soil</div>
-            <div className="card-value">{latest.soil}%</div>
-            <div className={`card-status ${soilStatus}`}>
-              {soilStatus.toUpperCase()}
-            </div>
-          </button>
+        <Card icon={<FaLeaf/>} title="Soil"
+          value={`${latest.soil}%`} status={soilStatus}/>
 
-          {/* TEMP */}
-          <button className="card compact">
-            <FaTemperatureHigh className="icon" />
-            <div className="label">Temp</div>
-            <div className="card-value">{latest.temp}°C</div>
-          </button>
+        <Card icon={<FaTemperatureHigh/>} title="Temp"
+          value={`${latest.temp}°C`}/>
 
-          {/* HUMIDITY */}
-          <button className="card compact">
-            <FaTint className="icon" />
-            <div className="label">Humidity</div>
-            <div className="card-value">{latest.humidity}%</div>
-          </button>
+        <Card icon={<FaTint/>} title="Humidity"
+          value={`${latest.humidity}%`}/>
 
-          {/* SUNLIGHT */}
-          <button className="card compact">
-            <FaSun className="icon" />
-            <div className="label">Sunlight</div>
-            <div className="card-value">{latest.sunlight}%</div>
-          </button>
+        <Card icon={<FaSun/>} title="Sunlight"
+          value={`${latest.sunlight}%`}/>
 
-          {/* PUMP */}
-          <button className={`card compact ${pumpStatus}`}>
-            <FaPowerOff className="icon" />
-            <div className="label">Pump</div>
-            <div className="card-value">
-              {latest.pump === "1" ? "ON" : "OFF"}
-            </div>
-          </button>
+        <Card icon={<FaPowerOff/>} title="Pump"
+          value={latest.pump==="1"?"ON":"OFF"}
+          status={pumpStatus}/>
 
-          {/* RAIN */}
-          <button className="card compact">
-            <FaCloudRain className="icon" />
-            <div className="label">Rain</div>
-            <div className="card-value">
-              {latest.rain === "1" ? "Raining" : "Clear"}
-            </div>
-          </button>
+        <Card icon={<FaCloudRain/>} title="Rain"
+          value={latest.rain==="1"?"Raining":"Clear"}/>
 
-          {/* WATER */}
-          <button className="card compact">
-            <FaWater className="icon" />
-            <div className="label">Water</div>
-            <div className="card-value">{latest.water}%</div>
-          </button>
+        <Card icon={<FaWater/>} title="Water"
+          value={`${latest.water}%`}/>
 
-          {/* 🚨 OBSTACLE */}
-          <button className={`card compact ${obstacleClass}`}>
-            <div className="icon">📏</div>
-            <div className="label">Obstacle</div>
+        <Card icon={"📏"} title="Obstacle"
+          value={obstacleLabel}
+          status={obstacleClass}
+          extra={`${latest.distance} cm`}
+        />
+      </div>
 
-            <div className="card-value">
-              {obstacleLabel}
-            </div>
-
-            <div className={`card-status ${obstacleClass}`}>
-              {latest.distance} cm
-            </div>
-          </button>
-
-        </div>
-      </section>
-
-      {/* GRAPH */}
-      <main className="graphs-wrapper">
-        <section className="graph-section">
-          <h3>Soil Moisture</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={[0, 100]} />
-              <Tooltip />
-              <Line type="monotone" dataKey="soil" stroke="#0b7027" dot={false}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </section>
-      </main>
-
+      {/* GRAPHS */}
+      <div className="graphs">
+        <Graph title="Soil" dataKey="soil" data={chartData}/>
+        <Graph title="Temp" dataKey="temp" data={chartData}/>
+        <Graph title="Humidity" dataKey="humidity" data={chartData}/>
+        <Graph title="Sunlight" dataKey="sunlight" data={chartData}/>
+        <Graph title="Water" dataKey="water" data={chartData}/>
+        <Graph title="Distance" dataKey="distance" data={chartData}/>
+      </div>
     </div>
   );
 }
+
+
+/* ---------- COMPONENTS ---------- */
+
+const Card = ({icon, title, value, status="", extra=""}) => (
+  <div className={`card ${status}`}>
+    <div className="icon">{icon}</div>
+    <div className="title">{title}</div>
+    <div className="value">{value}</div>
+    {extra && <div className="extra">{extra}</div>}
+  </div>
+);
+
+const Graph = ({title, data, dataKey}) => (
+  <div className="graph">
+    <h3>{title}</h3>
+    <ResponsiveContainer width="100%" height={200}>
+      <LineChart data={data}>
+        <CartesianGrid strokeDasharray="3 3"/>
+        <XAxis dataKey="time"/>
+        <YAxis/>
+        <Tooltip/>
+        <Line type="monotone" dataKey={dataKey} stroke="#00ff9f" dot={false}/>
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+);

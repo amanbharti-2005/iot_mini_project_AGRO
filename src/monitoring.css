@@ -1,163 +1,177 @@
-/* monitoring.css - Compact grid cards + graphs below */
-
-/* Theme variables */
-:root {
-  --green: #0b7027;
-  --bg: #f4fff4;
-  --card: #ffffff;
-  --text: #073b18;
-  --muted: rgba(7,59,24,0.6);
-
-  --danger: #d32f2f;
-  --warning: #f9a825;
-  --success: #2e7d32;
-}
-
-.monitor.dark-mode {
-  --bg: #07160f;
-  --card: #0b2316;
-  --text: #dfffe1;
-  --muted: rgba(223,255,225,0.6);
-}
-
 .monitor {
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding: 24px 28px;
-  box-sizing: border-box;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  padding: 20px;
+  font-family: Inter;
+  transition: 0.4s;
 }
 
-/* Header */
-.monitor-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
+/* 🌙 DARK MODE */
+.monitor.dark-mode {
+  background: radial-gradient(circle at top, #0b1116, #02060a);
+  color: white;
 }
-.monitor-header h1 { margin:0; font-size:22px; }
-.subtitle { color:var(--muted); font-size:13px; margin-top:6px; }
 
-/* Cards */
-.top-cards { margin-top: 18px; }
+/* ☀️ LIGHT MODE */
+.monitor.light-mode {
+  background: linear-gradient(135deg, #f4fff4, #e9f7ef);
+  color: #073b18;
+}
 
-.cards-grid {
+/* GRID */
+.cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(4,1fr);
+  gap: 18px;
+  margin-top: 20px;
 }
 
-.card.compact {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: left;
-  box-shadow: 0 8px 18px rgba(3,30,12,0.04);
-  border: 1px solid rgba(11,112,39,0.06);
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
+/* 🔥 PREMIUM GLASS CARD */
+.card {
+  position: relative;
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 18px;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.card.compact:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(3,30,12,0.08);
+/* LIGHT MODE CARD */
+.monitor.light-mode .card {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
-.card.compact .icon {
-  color: var(--green);
-  font-size: 18px;
+/* ✨ SHINE EFFECT */
+.card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.15),
+    transparent
+  );
+  transform: rotate(25deg);
+  opacity: 0;
+  transition: 0.5s;
 }
 
-.card-value {
-  font-weight:700;
-  font-size:18px;
-  margin-top:4px;
+.card:hover::before {
+  opacity: 1;
+  left: 100%;
 }
 
-.card-status {
-  margin-top:6px;
-  font-size:13px;
-  color:var(--muted);
-  font-weight:600;
+/* 💡 HOVER GLOW */
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    0 0 25px rgba(0,255,150,0.25),
+    0 0 60px rgba(0,255,150,0.1);
+}
+
+/* ICON */
+.icon {
+  font-size: 22px;
+  color: #00ffb3;
+  margin-bottom: 10px;
+}
+
+/* glowing icon */
+.icon svg {
+  filter: drop-shadow(0 0 6px rgba(0,255,150,0.6));
+}
+
+/* TEXT */
+.title {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.value {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 /* -------- STATUS COLORS -------- */
 
 /* Soil */
-.card-status.low { color: var(--danger); }
-.card-status.high { color: var(--warning); }
-.card-status.normal { color: var(--success); }
+.card.low { border-left: 4px solid #ff4d4d; }
+.card.high { border-left: 4px solid #ffc107; }
+.card.normal { border-left: 4px solid #00ff9f; }
 
 /* Pump */
-.card-status.pump-on { color: var(--success); }
-.card-status.pump-off { color: var(--danger); }
+.card.on { border-left: 4px solid #00ff9f; }
+.card.off { border-left: 4px solid #ff4d4d; }
 
 /* Obstacle */
-.card-status.obstacle-detected { color: var(--warning); }
-.card-status.obstacle-clear { color: var(--success); }
+.card.detected { border-left: 4px solid #ffd54f; }
 
-/* -------- CARD HIGHLIGHTS -------- */
-
-.card.compact.low { border-left: 5px solid var(--danger); }
-.card.compact.high { border-left: 5px solid var(--warning); }
-
-.card.compact.pump-on { border-left: 5px solid var(--success); }
-.card.compact.pump-off { border-left: 5px solid var(--danger); }
-
-/* 🚨 EMERGENCY MODE */
-.card.compact.emergency {
-  border-left: 6px solid var(--danger);
-  animation: blink 0.7s infinite alternate;
+/* 🚨 EMERGENCY */
+.card.emergency {
+  border-left: 4px solid red;
+  animation: pulse 0.8s infinite alternate;
 }
 
-.card-status.emergency {
-  color: var(--danger);
-  font-weight: 800;
+/* 🔥 EMERGENCY GLOW */
+@keyframes pulse {
+  from { box-shadow: 0 0 10px red; }
+  to { box-shadow: 0 0 25px red; }
 }
 
-/* ⚡ NORMAL DETECTED */
-.card.compact.obstacle-detected {
-  border-left: 5px solid var(--warning);
+/* -------- OPTIONAL: SMOOTH ENTRY -------- */
+.card {
+  animation: fadeIn 0.4s ease;
 }
 
-/* -------- BLINK ANIMATION -------- */
-@keyframes blink {
-  from { opacity: 1; }
-  to { opacity: 0.5; }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* -------- GRAPHS -------- */
 
-.graphs-wrapper {
-  margin-top: 26px;
-  display:flex;
-  flex-direction:column;
-  gap:30px;
+.graphs {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 20px;
 }
 
-.graph-section {
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+.graph {
+  background: rgba(255,255,255,0.05);
+  padding: 16px;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
 }
 
-.chart-area {
-  background: var(--card);
-  padding:12px;
-  border-radius:12px;
-  box-shadow:0 8px 18px rgba(3,30,12,0.04);
+/* LIGHT MODE GRAPH */
+.monitor.light-mode .graph {
+  background: rgba(255,255,255,0.7);
 }
 
-/* Responsive */
-@media (max-width: 1100px) {
-  .cards-grid { grid-template-columns: repeat(3, 1fr); }
-}
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .cards {
+    grid-template-columns: repeat(2,1fr);
+  }
 
-@media (max-width: 800px) {
-  .cards-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 480px) {
-  .cards-grid { grid-template-columns: 1fr; }
+  .graphs {
+    grid-template-columns: 1fr;
+  }
 }
